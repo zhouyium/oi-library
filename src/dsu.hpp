@@ -62,6 +62,26 @@ public:
         }
         return -_dsu[find_root(x)];
     }
+
+    //获取 DSU 的集合
+    std::vector<std::vector<int>> groups() {
+        std::vector<int> leader_buf(_n), group_size(_n);
+        for (int i = 0; i < _n; i++) {
+            leader_buf[i] = leader(i);
+            group_size[leader_buf[i]]++;
+        }
+        std::vector<std::vector<int>> result(_n);
+        for (int i = 0; i < _n; i++) {
+            result[i].reserve(group_size[i]);
+        }
+        for (int i = 0; i < _n; i++) {
+            result[leader_buf[i]].push_back(i);
+        }
+        result.erase(std::remove_if(result.begin(), result.end(),
+                    [&](const std::vector<int>& v) { return v.empty(); }),
+                    result.end());
+        return result;
+    }
 }; //end of struct
 
 } //end of namespace
